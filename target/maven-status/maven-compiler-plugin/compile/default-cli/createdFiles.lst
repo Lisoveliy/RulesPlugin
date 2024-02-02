@@ -1,0 +1,11 @@
+random\rules\Commands\Object\InfoCommand.class
+random\rules\Commands\Object\RemoveCommand.class
+random\rules\Storage.class
+random\rules\Commands\Object\ObjectCommand.class
+random\rules\Commands\Object\CreateCommand.class
+random\rules\Commands\Object\DeleteCommand.class
+random\rules\Constants.class
+random\rules\Rules.class
+random\rules\Commands\Object\AddCommand.class
+random\rules\Commands\ObjectCommandListener.class
+random\rules\Rule.class

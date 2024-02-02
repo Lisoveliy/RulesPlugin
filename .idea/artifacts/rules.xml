@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="rules">
+    <output-path>$PROJECT_DIR$/out/artifacts/rules</output-path>
+    <root id="archive" name="rules.jar" />
+  </artifact>
+</component>

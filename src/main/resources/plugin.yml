@@ -1,0 +1,8 @@
+name: Rules
+version: '${project.version}'
+main: random.rules.Rules
+api-version: '1.20'
+commands:
+  object:
+    description: "Создание, удаление объектов с правилами"
+    usage: "usage: /object [info|add|create|delete|remove] <object> [rules]"
