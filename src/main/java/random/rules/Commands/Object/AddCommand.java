@@ -1,9 +1,7 @@
 package random.rules.Commands.Object;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import random.rules.Rule;
-import random.rules.Rules;
 import random.rules.Storage;
 
 import java.util.ArrayList;

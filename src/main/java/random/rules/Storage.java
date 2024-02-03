@@ -1,30 +1,28 @@
 package random.rules;
 
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Storage {
     private final HashMap<String, HashSet<Rule>> objectStorage = new HashMap<>();
 
-    private final HashMap<String, List<String>> yamlConfig;
     private final Yaml yaml;
     private final File file;
-    public Storage(HashMap<String, List<String>> data, Yaml yaml, File file) {
+    public Storage(File file) throws IOException {
         this.file = file;
-        this.yaml = yaml;
-        yamlConfig = data;
-        if (yamlConfig!= null) {
-            yamlConfig.forEach((key, value) -> {
-                        objectStorage.put(key, new HashSet<>(value.stream().map(Rule::valueOf).toList()));
-                    }
+        yaml = new Yaml();
+        loadFileStorage();
+    }
+    private void loadFileStorage() throws IOException {
+        FileReader fileReader = new FileReader(file);
+        //noinspection unchecked
+        var data = ((HashMap<String, List<String>>) yaml.load(fileReader));
+        fileReader.close();
+        if (data != null) {
+            data.forEach((key, value) -> objectStorage.put(key, new HashSet<>(value.stream().map(Rule::valueOf).toList()))
             );
         }
     }
@@ -36,7 +34,6 @@ public class Storage {
             return hashset.stream().toList();
         return null;
     }
-
 
     public List<String> getObjects() {
         return objectStorage.keySet().stream().toList();
@@ -79,15 +76,12 @@ public class Storage {
     }
 
     private void saveFile() {
-        var serobject = new HashMap<String, List<String>>();
-        objectStorage.forEach((key, value) -> {
-            serobject.put(key, value.stream().map(Enum::name).toList());
-        });
+        var serObject = new HashMap<String, List<String>>();
+        objectStorage.forEach((key, value) -> serObject.put(key, value.stream().map(Enum::name).toList()));
         try {
             var writer = new FileWriter(file);
-            yaml.dump(serobject, writer);
+            yaml.dump(serObject, writer);
             writer.close();
-            System.out.println(serobject);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

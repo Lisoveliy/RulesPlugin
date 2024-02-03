@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 import random.rules.Commands.Object.ObjectCommand;
 import random.rules.Rules;
 
@@ -15,13 +16,11 @@ public class ObjectCommandListener implements CommandExecutor, TabCompleter {
 
     public ObjectCommandListener(List<ObjectCommand> commands, Rules plugin) {
         Objects.requireNonNull(plugin.getCommand("object")).setExecutor(this);
-        commands.forEach(x -> {
-            this.commands.put(x.getName(), x);
-        });
+        commands.forEach(x -> this.commands.put(x.getName(), x));
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String str, String[] args) {
         if (args.length < 1)
             return false;
         var executableCommand = this.commands.get(args[0]);
@@ -40,7 +39,7 @@ public class ObjectCommandListener implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String>
-    onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         switch (args.length){
             case 0:
                 return commands.keySet().stream().toList();

@@ -1,12 +1,10 @@
 package random.rules.Commands.Object;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import random.rules.Rule;
 import random.rules.Storage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RemoveCommand extends ObjectCommand{
