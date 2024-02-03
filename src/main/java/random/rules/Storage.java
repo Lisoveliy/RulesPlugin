@@ -1,44 +1,32 @@
 package random.rules;
 
-import it.unimi.dsi.fastutil.Hash;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
 
-public class Storage implements ConfigurationSerializable {
+public class Storage {
     private final HashMap<String, HashSet<Rule>> objectStorage = new HashMap<>();
-    private final FileConfiguration configuration;
-    private final File file;
 
-    public Storage(FileConfiguration fileConfiguration, File file) {
+    private final HashMap<String, List<String>> yamlConfig;
+    private final Yaml yaml;
+    private final File file;
+    public Storage(HashMap<String, List<String>> data, Yaml yaml, File file) {
         this.file = file;
-        this.configuration = fileConfiguration;
-        var objects = (HashMap<String, HashSet<String>>) fileConfiguration.get("objects");
-        if (objects != null) {
-            objects.forEach((key, value) -> {
+        this.yaml = yaml;
+        yamlConfig = data;
+        if (yamlConfig!= null) {
+            yamlConfig.forEach((key, value) -> {
                         objectStorage.put(key, new HashSet<>(value.stream().map(Rule::valueOf).toList()));
                     }
             );
         }
-    }
-
-    @Override
-    @NotNull
-    public Map<String, Object> serialize() {
-        var fileStorageMap = new HashMap<String, HashSet<String>>();
-        objectStorage.forEach((key, value) -> {
-            fileStorageMap.put(key, new HashSet<>(value.stream().map(Enum::name).toList()));
-        });
-        return new HashMap<>(fileStorageMap);
     }
 
     @Nullable
@@ -91,11 +79,15 @@ public class Storage implements ConfigurationSerializable {
     }
 
     private void saveFile() {
-        configuration.set("objects", this.serialize());
-        System.out.println(this.serialize());
-        System.out.println(configuration.get("objects"));
+        var serobject = new HashMap<String, List<String>>();
+        objectStorage.forEach((key, value) -> {
+            serobject.put(key, value.stream().map(Enum::name).toList());
+        });
         try {
-            configuration.save(file);
+            var writer = new FileWriter(file);
+            yaml.dump(serobject, writer);
+            writer.close();
+            System.out.println(serobject);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
